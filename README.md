@@ -3,7 +3,7 @@
 A comprehensive web application for managing day care operations, built with Next.js, TypeScript, Prisma, and PostgreSQL.
 
 ## Features
-
+##
 ### For Parents
 - 👨‍👩‍👧‍👦 Manage children profiles
 - 📝 Submit and track applications
