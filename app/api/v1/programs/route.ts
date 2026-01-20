@@ -12,10 +12,12 @@ export async function GET(request: NextRequest) {
         id: true,
         name: true,
         description: true,
-        ageRange: true,
-        capacity: true,
-        tuitionFee: true,
-        schedule: true,
+        ageMinMonths: true,
+        ageMaxMonths: true,
+        isActive: true,
+      },
+      where: {
+        isActive: true,
       },
       orderBy: {
         name: "asc",
