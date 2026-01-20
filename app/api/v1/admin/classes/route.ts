@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
       data: {
         name,
         programId,
-        teacherId,
+        teacherUserId: teacherId,
         capacity,
         schedule,
         ageRange,
