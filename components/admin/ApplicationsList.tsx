@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import ApplicationStatus from "@/components/parent/ApplicationStatus";
+import { ApplicationStatus as AppStatus } from "@/generated/prisma";
 
 interface Application {
   id: string;
-  status: string;
+  status: AppStatus;
   submittedAt: string | null;
   child: {
     name: string;
