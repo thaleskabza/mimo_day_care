@@ -105,14 +105,12 @@ export async function POST(
 
     // Create audit log
     await createAuditLog({
-      action: "ENROLLMENT_ACTIVATED",
+      actorUserId: userId,
+      actionType: "ENROLLMENT_ACTIVATED",
       entityType: "ENROLLMENT",
       entityId: id,
-      userId,
-      metadata: {
-        childId: enrollment.childId,
-        classId: enrollment.classId,
-      },
+      before: { status: enrollment.status },
+      after: { status: "ACTIVE", childId: enrollment.childId, classId: enrollment.classId },
     });
 
     return NextResponse.json({ enrollment: updatedEnrollment });

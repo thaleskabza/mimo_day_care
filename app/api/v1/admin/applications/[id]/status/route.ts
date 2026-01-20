@@ -72,15 +72,12 @@ export async function POST(
 
     // Create audit log
     await createAuditLog({
-      action: "APPLICATION_STATUS_CHANGED",
+      actorUserId: userId,
+      actionType: "APPLICATION_STATUS_CHANGED",
       entityType: "APPLICATION",
       entityId: id,
-      userId,
-      metadata: {
-        oldStatus: application.status,
-        newStatus: status,
-        adminNotes,
-      },
+      before: { status: application.status },
+      after: { status, adminNotes },
     });
 
     return NextResponse.json({ application: updatedApplication });
