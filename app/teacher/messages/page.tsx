@@ -9,7 +9,7 @@ export default function TeacherMessagesPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  useEffect() => {
+  useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
     }
