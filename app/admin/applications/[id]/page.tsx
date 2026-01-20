@@ -7,10 +7,11 @@ import Link from "next/link";
 import ApplicationStatus from "@/components/parent/ApplicationStatus";
 import StatusTransitionForm from "@/components/admin/StatusTransitionForm";
 import EnrollmentForm from "@/components/admin/EnrollmentForm";
+import { ApplicationStatus as AppStatus } from "@/generated/prisma";
 
 interface Application {
   id: string;
-  status: string;
+  status: AppStatus;
   submittedAt: string | null;
   reviewedAt: string | null;
   adminNotes: string | null;
