@@ -106,7 +106,7 @@ export async function POST(
     // Create audit log
     await createAuditLog({
       action: "ENROLLMENT_ACTIVATED",
-      entityType: "Enrollment",
+      entityType: "ENROLLMENT",
       entityId: id,
       userId,
       metadata: {

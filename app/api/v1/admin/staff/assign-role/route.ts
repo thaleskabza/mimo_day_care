@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     // Create audit log
     await createAuditLog({
       action: "ROLE_ASSIGNED",
-      entityType: "User",
+      entityType: "USER",
       entityId: userId,
       userId: adminUserId,
       metadata: {
