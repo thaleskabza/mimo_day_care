@@ -18,19 +18,10 @@ export async function GET(request: NextRequest) {
 
     const userId = (session.user as any).id;
 
-    // Get teacher profile
-    const teacherProfile = await db.teacherProfile.findUnique({
-      where: { userId },
-    });
-
-    if (!teacherProfile) {
-      return NextResponse.json({ error: "Teacher profile not found" }, { status: 404 });
-    }
-
     // Get classes assigned to this teacher
     const classes = await db.class.findMany({
       where: {
-        teacherId: teacherProfile.id,
+        teacherUserId: userId,
       },
       include: {
         program: true,
