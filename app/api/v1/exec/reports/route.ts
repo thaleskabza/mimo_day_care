@@ -253,7 +253,6 @@ async function generateFinancialReport() {
           program: {
             select: {
               name: true,
-              tuitionFee: true,
             },
           },
         },
@@ -261,38 +260,28 @@ async function generateFinancialReport() {
     },
   });
 
-  // Calculate revenue by program
-  const revenueByProgram: Record<string, { count: number; revenue: number }> = {};
-  let totalRevenue = 0;
+  // Group enrollments by program
+  const enrollmentsByProgram: Record<string, number> = {};
 
   enrollments.forEach((enrollment) => {
     const programName = enrollment.class.program.name;
-    const fee = enrollment.class.program.tuitionFee;
-
-    if (!revenueByProgram[programName]) {
-      revenueByProgram[programName] = { count: 0, revenue: 0 };
+    if (!enrollmentsByProgram[programName]) {
+      enrollmentsByProgram[programName] = 0;
     }
-
-    revenueByProgram[programName].count++;
-    revenueByProgram[programName].revenue += fee;
-    totalRevenue += fee;
+    enrollmentsByProgram[programName]++;
   });
 
   return {
     type: "financial",
     generatedAt: new Date().toISOString(),
-    note: "Based on active enrollments and current tuition fees",
+    note: "Financial reporting requires tuition fee configuration in the Program model",
     summary: {
-      totalMonthlyRevenue: totalRevenue,
       totalActiveEnrollments: enrollments.length,
-      averageRevenuePerEnrollment:
-        enrollments.length > 0 ? Math.round((totalRevenue / enrollments.length) * 100) / 100 : 0,
+      programCount: Object.keys(enrollmentsByProgram).length,
     },
-    byProgram: Object.entries(revenueByProgram).map(([name, data]) => ({
+    byProgram: Object.entries(enrollmentsByProgram).map(([name, count]) => ({
       programName: name,
-      activeEnrollments: data.count,
-      monthlyRevenue: data.revenue,
-      averageFee: Math.round((data.revenue / data.count) * 100) / 100,
+      activeEnrollments: count,
     })),
   };
 }
