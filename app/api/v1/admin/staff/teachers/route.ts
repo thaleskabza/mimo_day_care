@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
           email,
           name,
           phone,
-          password: hashedPassword,
+          passwordHash: hashedPassword,
           status: "ACTIVE",
         },
       });
@@ -96,8 +96,8 @@ export async function POST(request: NextRequest) {
           name: result.user.name,
           email: result.user.email,
           phone: result.user.phone,
-          bio: result.teacherProfile.bio,
-          certifications: result.teacherProfile.certifications,
+          qualifications: result.teacherProfile.qualifications,
+          staffNumber: result.teacherProfile.staffNumber,
         },
       },
       { status: 201 }
