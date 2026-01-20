@@ -192,8 +192,8 @@ description: "Task list for MiMo Day Care MVP implementation"
 - [X] T100 [US3] Build admin portal applications page in app/admin/applications/page.tsx
 - [X] T101 [US3] Build admin portal application detail page in app/admin/applications/[id]/page.tsx
 - [X] T102 [US3] Build admin portal enrollments page in app/admin/enrollments/page.tsx
-- [ ] T103 [US3] Build admin portal classes page in app/admin/classes/page.tsx
-- [ ] T104 [US3] Build admin portal staff management page in app/admin/staff/page.tsx
+- [X] T103 [US3] Build admin portal classes page in app/admin/classes/page.tsx
+- [X] T104 [US3] Build admin portal staff management page in app/admin/staff/page.tsx
 - [X] T105 [US3] Add Zod validation for enrollment creation in lib/validations/enrollment.ts
 - [X] T106 [US3] Add Zod validation for status transitions in lib/validations/application.ts
 
@@ -320,20 +320,20 @@ description: "Task list for MiMo Day Care MVP implementation"
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T161 [P] Create seed script for development data in prisma/seed.ts
+- [X] T161 [P] Create seed script for development data in prisma/seed.ts
 - [ ] T162 [P] Add loading states to all async operations in components
-- [ ] T163 [P] Add error boundaries for graceful error handling in app/error.tsx
+- [X] T163 [P] Add error boundaries for graceful error handling in app/error.tsx
 - [ ] T164 [P] Implement toast notifications for user feedback in components/ui/Toast.tsx
 - [ ] T165 [P] Add form validation error displays to all forms
 - [ ] T166 [US3] Build admin audit logs viewer page in app/admin/audit/page.tsx
 - [ ] T167 Setup Vercel deployment configuration in vercel.json
 - [ ] T168 Configure Prisma logging for development in lib/db.ts
 - [ ] T169 Add API response types in lib/types/api.ts
-- [ ] T170 [P] Create shared UI components (Button, Input, Select, etc.) in components/ui/
+- [X] T170 [P] Create shared UI components (Button, Input, Select, etc.) in components/ui/
 - [ ] T171 Add loading skeletons for data fetching states
-- [ ] T172 Add 404 page in app/not-found.tsx
-- [ ] T173 Add 500 error page in app/error.tsx
-- [ ] T174 Create README with setup instructions
+- [X] T172 Add 404 page in app/not-found.tsx
+- [X] T173 Add 500 error page in app/error.tsx
+- [X] T174 Create README with setup instructions
 - [ ] T175 [P] Add JSDoc comments to all utility functions
 - [ ] T176 Optimize images and add lazy loading where appropriate
 - [ ] T177 Run accessibility audit and fix issues
