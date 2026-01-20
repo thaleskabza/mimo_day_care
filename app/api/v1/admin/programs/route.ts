@@ -8,10 +8,9 @@ import { z } from "zod";
 const createProgramSchema = z.object({
   name: z.string().min(2, "Program name must be at least 2 characters"),
   description: z.string().optional(),
-  ageRange: z.string(),
-  capacity: z.number().int().positive("Capacity must be a positive number"),
-  tuitionFee: z.number().positive("Tuition fee must be positive"),
-  schedule: z.string().optional(),
+  ageMinMonths: z.number().int().min(0, "Minimum age must be non-negative"),
+  ageMaxMonths: z.number().int().positive("Maximum age must be positive"),
+  isActive: z.boolean().optional(),
 });
 
 /**
@@ -70,17 +69,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, description, ageRange, capacity, tuitionFee, schedule } = validation.data;
+    const { name, description, ageMinMonths, ageMaxMonths, isActive } = validation.data;
 
     // Create program
     const program = await db.program.create({
       data: {
         name,
         description,
-        ageRange,
-        capacity,
-        tuitionFee,
-        schedule,
+        ageMinMonths,
+        ageMaxMonths,
+        isActive: isActive ?? true,
       },
     });
 
