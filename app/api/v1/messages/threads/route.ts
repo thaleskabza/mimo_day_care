@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     const userId = (session.user as any).id;
     const userRoles = (session.user as any).roles || [];
 
-    let threads = [];
+    let threads: any = [];
 
     // Check user role and fetch appropriate threads
     if (userRoles.some((r: any) => r.role === "PARENT")) {
@@ -251,6 +251,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Get class to find teacher
+    const classEntity = await db.class.findUnique({
+      where: { id: classId },
+    });
+
+    if (!classEntity) {
+      return NextResponse.json({ error: "Class not found" }, { status: 404 });
+    }
+
+    if (!classEntity.teacherUserId) {
+      return NextResponse.json(
+        { error: "Class does not have an assigned teacher" },
+        { status: 400 }
+      );
+    }
+
     // Check if thread already exists
     const existingThread = await db.messageThread.findFirst({
       where: {
@@ -271,6 +287,8 @@ export async function POST(request: NextRequest) {
       data: {
         childId,
         classId,
+        parentUserId: parentProfile.userId,
+        teacherUserId: classEntity.teacherUserId,
       },
       include: {
         child: true,
