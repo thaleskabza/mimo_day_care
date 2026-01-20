@@ -87,10 +87,7 @@ export async function GET(
       hasAccess = parentProfile?.userId === thread.child.parentUserId;
     } else if (userRoles.some((r: any) => r.role === "TEACHER")) {
       // Teacher can access if assigned to the class
-      const teacherProfile = await db.teacherProfile.findUnique({
-        where: { userId },
-      });
-      hasAccess = teacherProfile?.id === thread.class.teacherId;
+      hasAccess = userId === thread.class.teacherUserId;
     } else if (hasAnyRole(session.user as any, ["ADMIN", "PRINCIPAL"])) {
       // Admin can access all threads (audit)
       hasAccess = true;
