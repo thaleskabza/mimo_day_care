@@ -85,10 +85,7 @@ export async function POST(
       }
     } else if (userRoles.some((r: any) => r.role === "TEACHER")) {
       // Teacher can send if assigned to the class
-      const teacherProfile = await db.teacherProfile.findUnique({
-        where: { userId },
-      });
-      hasAccess = teacherProfile?.id === thread.class.teacherId;
+      hasAccess = userId === thread.class.teacherUserId;
     }
 
     if (!hasAccess) {
@@ -99,8 +96,8 @@ export async function POST(
     const message = await db.message.create({
       data: {
         threadId,
-        senderId: userId,
-        content,
+        senderUserId: userId,
+        body: content,
       },
       include: {
         sender: {
