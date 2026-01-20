@@ -84,7 +84,6 @@ export async function POST(request: NextRequest) {
       data: {
         childId: application.childId,
         classId,
-        applicationId,
         status: "PENDING",
         startDate: new Date(startDate),
         endDate: endDate ? new Date(endDate) : null,
