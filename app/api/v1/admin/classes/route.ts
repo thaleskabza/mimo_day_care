@@ -10,8 +10,6 @@ const createClassSchema = z.object({
   programId: z.string().cuid("Invalid program ID"),
   teacherId: z.string().cuid("Invalid teacher ID"),
   capacity: z.number().int().positive("Capacity must be a positive number"),
-  schedule: z.string().optional(),
-  ageRange: z.string().optional(),
 });
 
 /**
@@ -93,7 +91,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, programId, teacherId, capacity, schedule, ageRange } = validation.data;
+    const { name, programId, teacherId, capacity } = validation.data;
 
     // Verify program exists
     const program = await db.program.findUnique({
@@ -141,8 +139,6 @@ export async function POST(request: NextRequest) {
         programId,
         teacherUserId: teacherId,
         capacity,
-        schedule,
-        ageRange,
       },
       include: {
         program: true,
