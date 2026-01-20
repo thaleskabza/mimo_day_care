@@ -63,8 +63,6 @@ export async function POST(
       data: {
         status,
         adminNotes,
-        reviewedAt: new Date(),
-        reviewedBy: userId,
       },
       include: {
         child: true,
