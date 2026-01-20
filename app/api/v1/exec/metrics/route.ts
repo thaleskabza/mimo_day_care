@@ -55,7 +55,6 @@ export async function GET(request: NextRequest) {
       select: {
         id: true,
         name: true,
-        capacity: true,
         _count: {
           select: {
             classes: true,
@@ -178,7 +177,6 @@ export async function GET(request: NextRequest) {
         total: totalPrograms,
         breakdown: programsWithCapacity.map((program) => ({
           name: program.name,
-          capacity: program.capacity,
           classCount: program._count.classes,
           applicationCount: program._count.applications,
         })),
