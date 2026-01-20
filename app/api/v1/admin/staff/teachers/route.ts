@@ -11,8 +11,8 @@ const createTeacherSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   phone: z.string().optional(),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  bio: z.string().optional(),
-  certifications: z.string().optional(),
+  qualifications: z.string().optional(),
+  staffNumber: z.string().optional(),
 });
 
 /**
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email, name, phone, password, bio, certifications } = validation.data;
+    const { email, name, phone, password, qualifications, staffNumber } = validation.data;
 
     // Check if user already exists
     const existingUser = await db.user.findUnique({
@@ -80,8 +80,8 @@ export async function POST(request: NextRequest) {
       const teacherProfile = await tx.teacherProfile.create({
         data: {
           userId: user.id,
-          bio,
-          certifications,
+          qualifications,
+          staffNumber,
         },
       });
 
