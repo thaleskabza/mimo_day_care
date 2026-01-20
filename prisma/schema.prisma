@@ -1,0 +1,233 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  phone        String?
+  status       UserStatus @default(ACTIVE)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  roles            UserRole[]
+  parentProfile    ParentProfile?
+  teacherProfile   TeacherProfile?
+  auditLogs        AuditLog[]
+  sentMessages     Message[]
+
+  @@map("users")
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  userId    String
+  role      Role
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
+  @@map("user_roles")
+}
+
+enum Role {
+  PARENT
+  TEACHER
+  ADMIN
+  EXECUTIVE
+  PRINCIPAL
+}
+
+model ParentProfile {
+  id                    String  @id @default(cuid())
+  userId                String  @unique
+  address               String?
+  emergencyContactsJson String? // JSON string
+  consentJson           String? // JSON string
+
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  children        Child[]
+  messageThreads  MessageThread[]
+
+  @@map("parent_profiles")
+}
+
+model TeacherProfile {
+  id             String  @id @default(cuid())
+  userId         String  @unique
+  qualifications String?
+  staffNumber    String? @unique
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classes        Class[]
+  messageThreads MessageThread[]
+
+  @@map("teacher_profiles")
+}
+
+model Child {
+  id           String   @id @default(cuid())
+  parentUserId String
+  name         String
+  dob          DateTime
+  medicalNotes String?
+  allergies    String?
+  pickupListJson String? // JSON string
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  parent         ParentProfile   @relation(fields: [parentUserId], references: [userId], onDelete: Cascade)
+  applications   Application[]
+  enrollments    Enrollment[]
+  messageThreads MessageThread[]
+
+  @@map("children")
+}
+
+model Program {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  ageMinMonths Int
+  ageMaxMonths Int
+  description String?
+  isActive    Boolean @default(true)
+
+  classes      Class[]
+  applications Application[]
+
+  @@map("programs")
+}
+
+model Class {
+  id          String   @id @default(cuid())
+  programId   String
+  name        String
+  teacherUserId String?
+  capacity    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  program        Program         @relation(fields: [programId], references: [id])
+  teacher        TeacherProfile? @relation(fields: [teacherUserId], references: [userId], onDelete: SetNull)
+  enrollments    Enrollment[]
+  messageThreads MessageThread[]
+
+  @@unique([programId, name])
+  @@map("classes")
+}
+
+model Application {
+  id          String            @id @default(cuid())
+  childId     String
+  programId   String
+  status      ApplicationStatus @default(DRAFT)
+  adminNotes  String?
+  submittedAt DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  child   Child   @relation(fields: [childId], references: [id], onDelete: Cascade)
+  program Program @relation(fields: [programId], references: [id])
+
+  @@map("applications")
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  WAITLISTED
+  REJECTED
+}
+
+model Enrollment {
+  id        String           @id @default(cuid())
+  childId   String
+  classId   String
+  startDate DateTime
+  endDate   DateTime?
+  status    EnrollmentStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  child Child @relation(fields: [childId], references: [id], onDelete: Cascade)
+  class Class @relation(fields: [classId], references: [id])
+
+  @@unique([childId, status])
+  @@map("enrollments")
+}
+
+enum EnrollmentStatus {
+  PENDING
+  ACTIVE
+  PAUSED
+  ENDED
+}
+
+model MessageThread {
+  id            String   @id @default(cuid())
+  childId       String
+  classId       String
+  parentUserId  String
+  teacherUserId String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  child    Child           @relation(fields: [childId], references: [id], onDelete: Cascade)
+  class    Class           @relation(fields: [classId], references: [id])
+  parent   ParentProfile   @relation(fields: [parentUserId], references: [userId])
+  teacher  TeacherProfile  @relation(fields: [teacherUserId], references: [userId])
+  messages Message[]
+
+  @@unique([childId, classId])
+  @@map("message_threads")
+}
+
+model Message {
+  id         String    @id @default(cuid())
+  threadId   String
+  senderUserId String
+  body       String    @db.Text
+  readAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  thread MessageThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  sender User          @relation(fields: [senderUserId], references: [id])
+
+  @@map("messages")
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorUserId String
+  actionType  String
+  entityType  String
+  entityId    String?
+  beforeJson  String?  @db.Text // JSON string
+  afterJson   String?  @db.Text // JSON string
+  createdAt   DateTime @default(now())
+
+  actor User @relation(fields: [actorUserId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([actionType])
+  @@map("audit_logs")
+}
