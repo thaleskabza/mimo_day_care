@@ -11,11 +11,17 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
-  // Create connection pool
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const connectionString = process.env.DATABASE_URL;
 
-  // Create adapter
-  const adapter = new PrismaNeon(pool);
+  if (!connectionString) {
+    throw new Error("DATABASE_URL is not defined");
+  }
+
+  // Create connection pool
+  const pool = new Pool({ connectionString });
+
+  // Create adapter - cast Pool to any to work around type mismatch
+  const adapter = new PrismaNeon(pool as any);
 
   // Create Prisma Client with adapter
   return new PrismaClient({
