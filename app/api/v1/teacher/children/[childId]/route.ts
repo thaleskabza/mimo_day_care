@@ -10,7 +10,7 @@ import { isTeacher } from "@/lib/auth/guards";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { childId: string } }
+  { params }: { params: Promise<{ childId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -20,7 +20,7 @@ export async function GET(
     }
 
     const userId = (session.user as any).id;
-    const { childId } = params;
+    const { childId } = await params;
 
     // Get teacher profile
     const teacherProfile = await db.teacherProfile.findUnique({

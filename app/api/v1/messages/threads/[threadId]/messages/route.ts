@@ -11,7 +11,7 @@ import { createMessageSchema } from "@/lib/validations/message";
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { threadId: string } }
+  { params }: { params: Promise<{ threadId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -22,7 +22,7 @@ export async function POST(
 
     const userId = (session.user as any).id;
     const userRoles = (session.user as any).roles || [];
-    const { threadId } = params;
+    const { threadId } = await params;
 
     // Only parents and teachers can send messages (not admins - read-only audit)
     if (!userRoles.some((r: any) => r.role === "PARENT" || r.role === "TEACHER")) {

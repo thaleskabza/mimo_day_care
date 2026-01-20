@@ -10,7 +10,7 @@ import { hasAnyRole } from "@/lib/auth/guards";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { threadId: string } }
+  { params }: { params: Promise<{ threadId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -21,7 +21,7 @@ export async function GET(
 
     const userId = (session.user as any).id;
     const userRoles = (session.user as any).roles || [];
-    const { threadId } = params;
+    const { threadId } = await params;
 
     // Get thread
     const thread = await db.messageThread.findUnique({

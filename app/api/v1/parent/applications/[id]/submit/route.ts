@@ -11,7 +11,7 @@ import { isValidApplicationTransition } from "@/lib/validators/state-transitions
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -21,7 +21,7 @@ export async function POST(
     }
 
     const userId = (session.user as any).id;
-    const { id } = params;
+    const { id } = await params;
 
     // Get parent profile
     const parentProfile = await db.parentProfile.findUnique({
